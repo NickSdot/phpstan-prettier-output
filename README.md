@@ -51,14 +51,25 @@ To make this package less hacky, we would need the following.
 
 Plugin repo: https://github.com/JetBrains/phpstorm-phpstan-plugin
 
+**PHPStan**
+
+Currently, we rely on Regex to re-format the reported messages (e.g. adding line-breaks). It would be nice, but it is 
+no deal-breaker if not, if PHPStan would add support for formatted messages.
+
+Possible approaches:
+- keep track of all non `sprintf`'ed messages in a static property (?) of `RuleErrorBuilder::message()`.
+- make it a first class feature to have a formatted and unformatted variant of messages.
+- add values required to build messages to `PHPStan\Command\AnalysisResult`.
+
 ## Considerations
 
 **Usage of "Tips"**
+
 Ondrej [recommended the sole usage of "tips" output](https://github.com/phpstan/phpstan/discussions/11476#discussioncomment-10274315). However, this seems  not sufficient for the following reasons.
 
-a) More often than not there are no "tips".
-b) There can be multiple tips per error.
-c) They are often simply external references like in the following example.
+- More often than not there are no "tips".
+- There can be multiple tips per error.
+- They are often simply external references like in the following example.
 
 ```
 12   app/Models/Option.php:12                                                      
@@ -68,7 +79,7 @@ PHPDoc type array of property App\Models\Option::$fillable is not the same as PH
 💡 https://phpstan.org/user-guide/stub-files    
 ```
 
-Given this example, the solution proposed by Ondrej would result in the following which is not much more readable 
+Given this example, the solution proposed by Ondrej would result in the following which is not much more readable
 and has the same cognitive load than before.
 
 ![](.github/img/ondrej-tips-usage-proposal.png)
@@ -87,16 +98,6 @@ PHPDoc type of property App\Models\Option::$fillable is not the same as PHPDoc t
 ```
 
 So the current conclusion is, tips are **not** the way.
-
-**PHPStan**
-
-Currently, we rely on Regex to re-format the reported messages (e.g. adding line-breaks). It would be nice, but it is 
-no deal-breaker if not, if PHPStan would add support for formatted messages.
-
-Possible approaches:
-- keep track of all non `sprintf`'ed messages in a static property (?) of `RuleErrorBuilder::message()`.
-- make it a first class feature to have a formatted and unformatted variant of messages.
-- add values required to build messages to `PHPStan\Command\AnalysisResult`.
 
 ## Known Issues
 
