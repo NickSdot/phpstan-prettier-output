@@ -1,0 +1,16 @@
+includes:
+    - phar://phpstan.phar/conf/bleedingEdge.neon
+    - vendor/phpstan/phpstan-strict-rules/rules.neon
+parameters:
+	level: 9
+	paths:
+	 - src
+	 - tests
+	errorFormat: customTable
+services:
+	errorFormatter.customTable:
+		class: NickSdot\PrettierStanOutput\CustomTableFormatter
+	errorFormatter.customJson:
+		class: NickSdot\PrettierStanOutput\CustomJsonFormatter
+	errorFormatter.checkstyle:
+		class: NickSdot\PrettierStanOutput\CustomCheckstyleFormatter

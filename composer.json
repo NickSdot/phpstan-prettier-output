@@ -1,0 +1,36 @@
+{
+  "name": "nicksdot/phpstan-prettier-output",
+  "description": "Custom PHPStan formatters for a better output.",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Nick Unicorn",
+      "email": "hi@nicksdot.dev"
+    }
+  ],
+  "require": {
+    "php": ">=8.0",
+    "phpstan/phpstan": "^1.11"
+  },
+  "require-dev": {
+    "friendsofphp/php-cs-fixer": "^3.59",
+    "phpstan/phpstan-strict-rules": "^1.6",
+    "phpunit/phpunit": "^9.5"
+  },
+  "autoload": {
+    "psr-4": {
+      "NickSdot\\PrettierStanOutput\\": "src"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Tests\\": "tests/"
+    }
+  },
+  "scripts": {
+    "fixer": "vendor/bin/php-cs-fixer --config=./.php-cs-fixer.php --allow-risky=yes",
+    "test": "phpunit --colors"
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true
+}
