@@ -1,10 +1,10 @@
 {
   "name": "nicksdot/phpstan-prettier-output",
-  "description": "Custom PHPStan formatters for a better output.",
+  "description": "Custom PHPStan formatters for a prettier output.",
   "license": "MIT",
   "authors": [
     {
-      "name": "Nick Unicorn",
+      "name": "Nick Sdot",
       "email": "hi@nicksdot.dev"
     }
   ],

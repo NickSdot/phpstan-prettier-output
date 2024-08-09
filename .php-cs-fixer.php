@@ -24,7 +24,7 @@ $rules = [
     ],
     'global_namespace_import' => [
         'import_classes' => false,
-        'import_constants' => false,
+        'import_constants' => true,
         'import_functions' => true,
     ],
     'no_unused_imports' => true,
@@ -46,20 +46,7 @@ $rules = [
     'final_class' => true,
 ];
 
-
-$finder = (new PhpCsFixer\Finder())
-    ->in(__DIR__)
-    ->exclude([
-        'Framework/bootstrap/cache',
-        'Framework/cache',
-        'storage/framework',
-        'tests/',
-        'tests/fixtures',
-        'node_modules',
-    ]);
-
 return (new PhpCsFixer\Config())
     ->setRiskyAllowed(true)
     ->setRules($rules)
-    ->setFinder($finder)
-    ->setCacheFile(__DIR__ . 'storage/quality/.php-cs-fixer.cache');
+    ->setFinder((new PhpCsFixer\Finder())->in(__DIR__ . '/src'));

@@ -15,7 +15,12 @@ use function count;
 use function htmlspecialchars;
 use function sprintf;
 
-// Based on the internal PHPStan `TableErrorFormatter`; version 1.11.7 from 06.07.2024
+use const ENT_COMPAT;
+use const ENT_XML1;
+
+// Based on the PHPStan built-in `CheckstyleErrorFormatter`; version 1.11.9 from August 2024
+
+/** @api */
 final readonly class CustomCheckstyleFormatter implements ErrorFormatter
 {
     public function __construct(private RelativePathHelper $relativePathHelper) {}
@@ -102,7 +107,7 @@ final readonly class CustomCheckstyleFormatter implements ErrorFormatter
     private function escape(?string $string = null): string
     {
         return null !== $string
-            ? htmlspecialchars($string, \ENT_XML1 | \ENT_COMPAT, 'UTF-8')
+            ? htmlspecialchars($string, ENT_XML1 | ENT_COMPAT, 'UTF-8')
             : '';
     }
 

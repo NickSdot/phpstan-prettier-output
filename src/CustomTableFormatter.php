@@ -26,7 +26,9 @@ use function str_contains;
 use function str_replace;
 use function str_starts_with;
 
-// Based on the internal PHPStan `TableErrorFormatter`; version 1.11.7 from 06.07.2024
+// Based on the PHPStan built-in `TableErrorFormatter`; version 1.11.9 from August 2024
+
+/** @api */
 final readonly class CustomTableFormatter implements ErrorFormatter
 {
     public function __construct(

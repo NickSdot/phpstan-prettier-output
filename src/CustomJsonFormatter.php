@@ -13,7 +13,9 @@ use Symfony\Component\Console\Formatter\OutputFormatter;
 use function array_key_exists;
 use function count;
 
-// Based on the internal PHPStan `TableErrorFormatter`; version 1.11.7 from 06.07.2024
+// Based on the PHPStan built-in `JsonErrorFormatter`; version 1.11.9 from August 2024
+
+/** @api */
 final class CustomJsonFormatter implements ErrorFormatter
 {
     /** @api */
