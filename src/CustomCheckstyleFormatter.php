@@ -42,9 +42,6 @@ final readonly class CustomCheckstyleFormatter implements ErrorFormatter
 
                 $message = $this->escape(
                     Message::applyCustomFormattingForIdeOutput($error)
-//                    'PHPDoc type array of property App\Models\Option::$fillable is not the same as PHPDoc type list<string> of overridden property Illuminate\Database\Eloquent\Model::$fillable.
-//. You can fix 3rd party PHPDoc types with stub files:
-//💡 https://phpstan.org/user-guide/stub-files'
                 );
 
                 $output->writeRaw(
