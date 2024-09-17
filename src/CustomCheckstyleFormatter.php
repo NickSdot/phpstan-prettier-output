@@ -44,16 +44,11 @@ final readonly class CustomCheckstyleFormatter implements ErrorFormatter
             $output->writeLineFormatted('');
 
             foreach ($errors as $error) {
-
-                $message = $this->escape(
-                    Message::applyCustomFormattingForIdeOutput($error)
-                );
-
                 $output->writeRaw(
                     sprintf(
                         '  <error line="%d" column="1" severity="error" message="%s" %s/>',
                         $this->escape((string) $error->getLine()),
-                        $message,
+                        $this->escape(Message::applyCustomFormattingForIdeOutput($error)),
                         null !== $error->getIdentifier() ? sprintf('source="%s"', $this->escape($error->getIdentifier())) : '',
                     )
                 );

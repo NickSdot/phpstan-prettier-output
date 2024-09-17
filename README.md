@@ -99,17 +99,6 @@ PHPDoc type of property App\Models\Option::$fillable is not the same as PHPDoc t
 
 So the current conclusion is, tips are **not** the way.
 
-## Known Issues
-
-For some reason there are sometimes formatting issues based on the cursor postion. This would be avoidable if 
-Jetbrains would allow line breaks as listed in the "Wishlist" section in this README.
-
-**Actual**
-![](.github/img/cursor-formatting-issue/actual.png)
-
-**Expected**
-![](.github/img/cursor-formatting-issue/expected.png)
-
 
 ## Credits
 

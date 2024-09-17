@@ -13,11 +13,14 @@ use function str_replace;
 use function vsprintf;
 use function explode;
 use function mb_strlen;
-use function str_repeat;
 use function array_splice;
 use function htmlspecialchars;
 use function max;
 use function str_ends_with;
+use function array_unshift;
+use function ltrim;
+use function mb_str_pad;
+use function trim;
 
 use const ENT_COMPAT;
 use const ENT_XML1;
@@ -73,57 +76,75 @@ final readonly class Message
             }
         }
 
-        return $message;
+        return trim($message);
     }
 
     public static function applyCustomFormattingForIdeOutput(Error $error): string
     {
+        $lines = explode("\n", self::applyCustomFormatting($error->getMessage()));
 
-        $message = $error->getMessage();
-        $identifier = $error->getIdentifier();
-        $tip = $error->getTip();
+        // PhpStorm adds the 'phpstan' string to the first line.
+        // this leads to formatting issues with all following
+        // lines. For that reason we manually add one line.
 
-        $formattedMessage = '';
+        array_unshift($lines, '');
 
-        $identifier = null !== $identifier
-            ? " ({$identifier})"
-            : '';
+        // We add the identifier to the very
+        // first line if we have one.
 
-        $lines = explode("\n", self::applyCustomFormatting($message));
-
-        array_splice($lines, 1, 0, [ '', '' ]);
-
-        if (null !== $tip) {
-            $lines[] = ''; // Separator line
-            $lines[] = $tip;
-            $lines[] = ''; // Separator line
+        if (null !== $identifier = $error->getIdentifier()) {
+            $lines[0] .= $identifier;
         }
+
+        // For the same reason as the unshift, we add
+        // one extra line which acts as a 'clear'.
+
+        array_splice($lines, 1, 0, [ '' ]);
+
+        // If we have a tip, we add it at the
+        // very end of the lines array.
+
+        if (null !== $tip = $error->getTip()) {
+            array_splice($lines, count($lines), 0, [ '', $tip ]);
+        }
+
+        // Because there can be multiple errors in the
+        // same time, we add two separator lines to
+        // the very end.
+
+        array_splice($lines, count($lines), 0, [ '', '' ]);
+
+        $lineLength = [];
+        $formattedMessage = '';
 
         foreach ($lines as $key => $line) {
 
-            $lineLength = mb_strlen($line);
+            $line = htmlspecialchars($line, ENT_XML1 | ENT_COMPAT, 'UTF-8');
+
+            $lineLength[$key] = mb_strlen($line);
 
             if (0 === $key) {
-                $lineLength += 9; // PhpStorm adds "phpstan: ", so we need to account for that.
-
-                if (0 < $count = mb_strlen($identifier)) {
-                    $lineLength += $count; // We added the identifier, so we need to account for that.
-                    $line .= $identifier;
-                }
+                $lineLength[$key] += 9; // PhpStorm adds "phpstan: " which we need to account for.
             }
-
-            // todo: 115 chars is the length of the tooltip without scrollbars.
-            //       If lines are longer, scrollbars appear. We need to make
-            //       sure that we check for the longest line in `$lines` and
-            //       then replace the static 115 with `$longest`.
-
-            if ($lineLength < 115) {
-                $line .= str_repeat('·', 115 - $lineLength);
-            }
-
-            $formattedMessage .= $line . ' '; // We need to have a single space after the added periods to line-break.
         }
 
-        return htmlspecialchars($formattedMessage, \ENT_XML1 | \ENT_COMPAT, 'UTF-8');
+        $largestLength = max(max($lineLength), 103);
+
+        foreach ($lines as $key => $line) {
+
+            $finalLength = 0 === $key
+                ? $largestLength - 9 // PhpStorm adds "phpstan: " which we need to account for.
+                : $largestLength;
+
+            $line = mb_str_pad(
+                ltrim(htmlspecialchars($line, ENT_XML1 | ENT_COMPAT, 'UTF-8'), ' '),
+                $finalLength,
+                '·'
+            );
+
+            $formattedMessage .= $line . ' ';
+        }
+
+        return $formattedMessage;
     }
 }
